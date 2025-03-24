@@ -74,8 +74,8 @@ const createYeuCauBaoTri = async (req, res) => {
 const updateYeuCauBaoTri = async (req, res) => {
     try {
         const maYC = req.params.id;
-        const { MaPhong, NgayYC, NgayHoanThanh } = req.body;
-        const yeuCauBaoTri = { MaPhong, NgayYC, NgayHoanThanh };
+        const { MaPhong, NgayYeuCau, MoTa, NgayHoanThanh, MaTrangThai } = req.body;
+        const yeuCauBaoTri = { MaPhong, NgayYeuCau, MoTa, NgayHoanThanh, MaTrangThai };
         await YeuCauBaoTriService.updateYeuCauBaoTri(maYC, yeuCauBaoTri);
         res.status(200).send({
             success: true,

@@ -2,12 +2,13 @@ const { DataTypes } = require("sequelize");
 const sequelize = require("../config/db"); // Import kết nối Sequelize
 const KhachHang = require("./khachhang"); // Import model KhachHang
 const Phong = require("./phong");
+const TrangThai = require("./trangthai"); // Import model TrangThai
 
 const DatPhong = sequelize.define(
-    "DatPhong", // Tên model
+    "DatPhong",
     {
         MaDatPhong: {
-            type: DataTypes.INTEGER, 
+            type: DataTypes.INTEGER,
             primaryKey: true,
             allowNull: false,
             autoIncrement: true,
@@ -24,40 +25,50 @@ const DatPhong = sequelize.define(
             type: DataTypes.INTEGER,
             allowNull: false,
             references: {
-                model: KhachHang, // Liên kết với model KhachHang
-                key: "MaKhachHang", // Trường khóa chính của KhachHang
+                model: KhachHang,
+                key: "MaKhachHang",
             },
         },
         MaPhong: {
             type: DataTypes.INTEGER,
             allowNull: false,
             references: {
-                model: Phong, // Liên kết với model Phong
-                key: "MaPhong", // Trường khóa chính của Phong
+                model: Phong,
+                key: "MaPhong",
             },
         },
-        TrangThai: { // Thêm cột TrangThai
-            type: DataTypes.STRING(20), // VARCHAR(20)
-            allowNull: false, // Vì có DEFAULT nên không cần allowNull: true
-            defaultValue: "Đang xử lý", // Giá trị mặc định
+        MaTrangThai: { // Thay TrangThai thành MaTrangThai
+            type: DataTypes.INTEGER,
+            allowNull: false,
+            defaultValue: 4, // Mặc định là "Đang xử lý" (MaTrangThai = 4)
+            references: {
+                model: TrangThai,
+                key: "MaTrangThai",
+            },
         },
     },
     {
-        tableName: "DatPhong", // Tên bảng trong MySQL
-        timestamps: false, // Không tự động tạo `createdAt` và `updatedAt`
+        tableName: "DatPhong",
+        timestamps: false,
     }
 );
 
 // Quan hệ với bảng KhachHang
 DatPhong.belongsTo(KhachHang, {
-    foreignKey: "MaKhachHang", // Khóa ngoại trong bảng DatPhong
-    targetKey: "MaKhachHang", // Khóa chính của bảng KhachHang
+    foreignKey: "MaKhachHang",
+    targetKey: "MaKhachHang",
 });
 
 // Quan hệ với bảng Phong
 DatPhong.belongsTo(Phong, {
-    foreignKey: "MaPhong", // Khóa ngoại trong bảng DatPhong
-    targetKey: "MaPhong", // Khóa chính của bảng Phong
+    foreignKey: "MaPhong",
+    targetKey: "MaPhong",
+});
+
+// Quan hệ với bảng TrangThai
+DatPhong.belongsTo(TrangThai, {
+    foreignKey: "MaTrangThai",
+    targetKey: "MaTrangThai",
 });
 
 module.exports = DatPhong;

@@ -46,4 +46,10 @@ const deleteNhanVienXuLyBaoTri = async (maNV, maYeuCau) => {
     return await record.destroy();
 };
 
-module.exports = { getAllNhanVienXuLyBaoTri, getNhanVienXuLyBaoTriByID, createNhanVienXuLyBaoTri, updateNhanVienXuLyBaoTri, deleteNhanVienXuLyBaoTri };
+module.exports = {
+    getAllNhanVienXuLyBaoTri,
+    getNhanVienXuLyBaoTriByID,
+    createNhanVienXuLyBaoTri,
+    updateNhanVienXuLyBaoTri,
+    deleteNhanVienXuLyBaoTri,
+};

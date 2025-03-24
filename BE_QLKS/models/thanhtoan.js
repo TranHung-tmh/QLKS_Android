@@ -2,60 +2,74 @@ const { DataTypes } = require("sequelize");
 const sequelize = require("../config/db"); // Import kết nối Sequelize
 const DatPhong = require("./datphong"); // Import model DatPhong
 const NhanVien = require("./nhanvien");  // Import model NhanVien
+const KhachHang = require("./khachhang"); // Import model KhachHang (thêm mới)
 
 const ThanhToan = sequelize.define(
     "ThanhToan",
     {
         MaThanhToan: {
-            type: DataTypes.INTEGER, // Sửa từ STRING thành INTEGER
-            primaryKey: true,       // Khóa chính
-            allowNull: false,       // Không NULL
-            autoIncrement: true,    // Thêm autoIncrement để khớp với CSDL
+            type: DataTypes.INTEGER,
+            primaryKey: true,
+            allowNull: false,
+            autoIncrement: true,
         },
         SoTien: {
-            type: DataTypes.DECIMAL(10, 2), // Sửa từ STRING thành DECIMAL(10,2)
-            allowNull: false,               // Không NULL
+            type: DataTypes.DECIMAL(10, 2),
+            allowNull: false,
         },
         PhuongThuc: {
-            type: DataTypes.STRING(20), // Giới hạn 20 ký tự như CSDL
-            allowNull: false,           // Không NULL
+            type: DataTypes.STRING(20),
+            allowNull: false,
         },
         MaDatPhong: {
-            type: DataTypes.INTEGER, // Sửa từ STRING thành INTEGER
-            allowNull: false,        // Không NULL
+            type: DataTypes.INTEGER,
+            allowNull: false,
             references: {
-                model: DatPhong,     // Liên kết với model DatPhong
-                key: "MaDatPhong",   // Khóa chính của DatPhong
+                model: DatPhong,
+                key: "MaDatPhong",
             },
         },
-        MaNV: { // Thêm trường MaNV
-            type: DataTypes.INTEGER, // Kiểu INT
-            allowNull: true,         // Có thể NULL (không có NOT NULL trong CSDL)
+        MaNV: {
+            type: DataTypes.INTEGER,
+            allowNull: true,
             references: {
-                model: NhanVien,     // Liên kết với model NhanVien
-                key: "MaNV",         // Khóa chính của NhanVien
+                model: NhanVien,
+                key: "MaNV",
             },
         },
-        NgayThanhToan: { // Thêm trường NgayThanhToan
-            type: DataTypes.DATE,   // Kiểu DATE
-            allowNull: false,       // Không NULL
+        NgayThanhToan: {
+            type: DataTypes.DATE,
+            allowNull: false,
+        },
+        MaKhachHang: { // Thêm trường MaKhachHang
+            type: DataTypes.INTEGER,
+            allowNull: false, // Có thể thay đổi thành true nếu bạn cho phép NULL
+            references: {
+                model: KhachHang,     // Liên kết với model KhachHang
+                key: "MaKhachHang",   // Khóa chính của KhachHang
+            },
         },
     },
     {
-        tableName: "ThanhToan", // Khớp với tên bảng trong CSDL
-        timestamps: false,      // Không tự động tạo `createdAt` và `updatedAt`
+        tableName: "ThanhToan",
+        timestamps: false,
     }
 );
 
 // Định nghĩa các mối quan hệ giữa các bảng
 ThanhToan.belongsTo(DatPhong, {
-    foreignKey: "MaDatPhong", // Khóa ngoại trong bảng ThanhToan
-    targetKey: "MaDatPhong",  // Khóa chính của bảng DatPhong
+    foreignKey: "MaDatPhong",
+    targetKey: "MaDatPhong",
 });
 
 ThanhToan.belongsTo(NhanVien, {
-    foreignKey: "MaNV",       // Khóa ngoại trong bảng ThanhToan
-    targetKey: "MaNV",        // Khóa chính của bảng NhanVien
+    foreignKey: "MaNV",
+    targetKey: "MaNV",
+});
+
+ThanhToan.belongsTo(KhachHang, { // Thêm quan hệ với KhachHang
+    foreignKey: "MaKhachHang",
+    targetKey: "MaKhachHang",
 });
 
 module.exports = ThanhToan;

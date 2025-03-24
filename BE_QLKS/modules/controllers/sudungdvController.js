@@ -135,15 +135,15 @@ const updateSuDungDV = async (req, res) => {
 const updateTrangThaiSDDV = async (req, res) => {
     try {
         const id = req.params.id;
-        const { TrangThai } = req.body; // Nhận trạng thái từ client
-        if (!TrangThai) {
+        const { MaTrangThai } = req.body; // Nhận trạng thái từ client
+        if (!MaTrangThai) {
             return res.status(400).send({
                 success: false,
                 message: "Trạng thái không được bỏ trống",
             });
         }
 
-        await suDungDVService.updateTrangThaiSDDV(id, TrangThai);
+        await suDungDVService.updateTrangThaiSDDV(id, MaTrangThai);
         res.status(200).send({
             success: true,
             message: "Cập nhật trạng thái thành công",

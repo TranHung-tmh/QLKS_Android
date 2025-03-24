@@ -1,21 +1,23 @@
+// modules/routes/khachhangRoutes.js
 const express = require("express");
 const { getKH, getKHByID, createKH, updateKH, deleteKH } = require("../controllers/khachhangController");
+const { authenticateToken, authorizeAdmin, authorizeKhachHang } = require("../../middleware/authMiddleware");
 
 const router = express.Router();
 
-// GETALL
-router.get("/getallKH", getKH);
+// GETALL - Chỉ Admin
+router.get("/getallKH", authenticateToken, authorizeAdmin, getKH);
 
-// GET BY ID
-router.get("/getKH/:id", getKHByID);
+// GET BY ID - Khách hàng (chỉ xem của mình) hoặc Admin
+router.get("/getKH/:id", authenticateToken, getKHByID);
 
-// CREATE
-router.post("/createKH", createKH);
+// CREATE - Chỉ Admin
+router.post("/createKH", authenticateToken, authorizeAdmin, createKH);
 
-// UPDATE
-router.put("/updateKH/:id", updateKH);
+// UPDATE - Khách hàng (chỉ cập nhật của mình) hoặc Admin
+router.put("/updateKH/:id", authenticateToken, updateKH);
 
-// DELETE
-router.delete("/deleteKH/:id", deleteKH);
+// DELETE - Chỉ Admin
+router.delete("/deleteKH/:id", authenticateToken, authorizeAdmin, deleteKH);
 
 module.exports = router;

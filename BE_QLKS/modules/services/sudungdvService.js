@@ -27,8 +27,8 @@ const updateSuDungDV = async (id, useService) => {
     return await suDungDVModel.updateSuDungDV(id, useService)
 };
 
-const updateTrangThaiSDDV = async (id, TrangThai) => {
-    return await suDungDVModel.updateTrangThaiSDDV(id, TrangThai);
+const updateTrangThaiSDDV = async (id, MaTrangThai) => {
+    return await suDungDVModel.updateTrangThaiSDDV(id, MaTrangThai);
 };
 
 // Xóa sử dụng dịch vụ

@@ -1,5 +1,3 @@
-CREATE DATABASE  IF NOT EXISTS `qlks` /*!40100 DEFAULT CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci */ /*!80016 DEFAULT ENCRYPTION='N' */;
-USE `qlks`;
 -- MySQL dump 10.13  Distrib 8.0.40, for Win64 (x86_64)
 --
 -- Host: 127.0.0.1    Database: qlks
@@ -18,6 +16,42 @@ USE `qlks`;
 /*!40111 SET @OLD_SQL_NOTES=@@SQL_NOTES, SQL_NOTES=0 */;
 
 --
+-- Table structure for table `danhgia`
+--
+
+DROP TABLE IF EXISTS `danhgia`;
+/*!40101 SET @saved_cs_client     = @@character_set_client */;
+/*!50503 SET character_set_client = utf8mb4 */;
+CREATE TABLE `danhgia` (
+  `MaDanhGia` int NOT NULL AUTO_INCREMENT,
+  `MaKhachHang` int NOT NULL,
+  `MaDatPhong` int NOT NULL,
+  `MaPhong` int DEFAULT NULL,
+  `DanhGia` int NOT NULL,
+  `NhanXet` varchar(500) COLLATE utf8mb4_unicode_ci DEFAULT NULL,
+  `NgayDanhGia` datetime NOT NULL DEFAULT CURRENT_TIMESTAMP,
+  PRIMARY KEY (`MaDanhGia`),
+  KEY `MaKhachHang` (`MaKhachHang`),
+  KEY `MaDatPhong` (`MaDatPhong`),
+  KEY `MaPhong` (`MaPhong`),
+  CONSTRAINT `danhgia_ibfk_1` FOREIGN KEY (`MaKhachHang`) REFERENCES `khachhang` (`MaKhachHang`),
+  CONSTRAINT `danhgia_ibfk_2` FOREIGN KEY (`MaDatPhong`) REFERENCES `datphong` (`MaDatPhong`),
+  CONSTRAINT `danhgia_ibfk_3` FOREIGN KEY (`MaPhong`) REFERENCES `phong` (`MaPhong`),
+  CONSTRAINT `danhgia_chk_1` CHECK ((`DanhGia` between 1 and 5))
+) ENGINE=InnoDB AUTO_INCREMENT=5 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
+/*!40101 SET character_set_client = @saved_cs_client */;
+
+--
+-- Dumping data for table `danhgia`
+--
+
+LOCK TABLES `danhgia` WRITE;
+/*!40000 ALTER TABLE `danhgia` DISABLE KEYS */;
+INSERT INTO `danhgia` VALUES (1,1,1,1,4,'Phòng sạch sẽ, nhân viên thân thiện, nhưng wifi hơi chậm.','2023-10-04 00:00:00'),(2,2,2,2,3,'Phòng ổn, nhưng cách âm không tốt.','2023-10-08 00:00:00'),(3,3,3,4,5,'Rất hài lòng, sẽ quay lại!','2023-10-13 00:00:00');
+/*!40000 ALTER TABLE `danhgia` ENABLE KEYS */;
+UNLOCK TABLES;
+
+--
 -- Table structure for table `datphong`
 --
 
@@ -30,13 +64,15 @@ CREATE TABLE `datphong` (
   `MaPhong` int NOT NULL,
   `NgayDat` date NOT NULL,
   `NgayTra` date NOT NULL,
-  `TrangThai` varchar(20) COLLATE utf8mb4_unicode_ci DEFAULT 'Đang xử lý',
+  `MaTrangThai` int NOT NULL,
   PRIMARY KEY (`MaDatPhong`),
   KEY `MaKhachHang` (`MaKhachHang`),
   KEY `MaPhong` (`MaPhong`),
+  KEY `MaTrangThai` (`MaTrangThai`),
   CONSTRAINT `datphong_ibfk_1` FOREIGN KEY (`MaKhachHang`) REFERENCES `khachhang` (`MaKhachHang`),
-  CONSTRAINT `datphong_ibfk_2` FOREIGN KEY (`MaPhong`) REFERENCES `phong` (`MaPhong`)
-) ENGINE=InnoDB AUTO_INCREMENT=4 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
+  CONSTRAINT `datphong_ibfk_2` FOREIGN KEY (`MaPhong`) REFERENCES `phong` (`MaPhong`),
+  CONSTRAINT `datphong_ibfk_3` FOREIGN KEY (`MaTrangThai`) REFERENCES `trangthai` (`MaTrangThai`)
+) ENGINE=InnoDB AUTO_INCREMENT=5 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
 /*!40101 SET character_set_client = @saved_cs_client */;
 
 --
@@ -45,7 +81,7 @@ CREATE TABLE `datphong` (
 
 LOCK TABLES `datphong` WRITE;
 /*!40000 ALTER TABLE `datphong` DISABLE KEYS */;
-INSERT INTO `datphong` VALUES (1,1,1,'2023-10-01','2023-10-03','Đã xác nhận'),(2,2,2,'2023-10-05','2023-10-07','Đang xử lý'),(3,3,4,'2023-10-10','2023-10-12','Đã hủy');
+INSERT INTO `datphong` VALUES (1,1,1,'2023-10-01','2023-10-03',5),(2,2,2,'2023-10-05','2023-10-07',4),(3,3,4,'2023-10-10','2023-10-12',6),(4,2,2,'2023-10-05','2023-10-09',5);
 /*!40000 ALTER TABLE `datphong` ENABLE KEYS */;
 UNLOCK TABLES;
 
@@ -62,7 +98,7 @@ CREATE TABLE `dichvu` (
   `GiaDichVu` decimal(10,2) NOT NULL,
   `MoTa` varchar(100) COLLATE utf8mb4_unicode_ci DEFAULT NULL,
   PRIMARY KEY (`MaDichVu`)
-) ENGINE=InnoDB AUTO_INCREMENT=5 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
+) ENGINE=InnoDB AUTO_INCREMENT=6 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
 /*!40101 SET character_set_client = @saved_cs_client */;
 
 --
@@ -94,7 +130,7 @@ CREATE TABLE `khachhang` (
   UNIQUE KEY `Email` (`Email`),
   KEY `MaNguoiDung` (`MaNguoiDung`),
   CONSTRAINT `khachhang_ibfk_1` FOREIGN KEY (`MaNguoiDung`) REFERENCES `nguoidung` (`MaNguoiDung`)
-) ENGINE=InnoDB AUTO_INCREMENT=4 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
+) ENGINE=InnoDB AUTO_INCREMENT=5 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
 /*!40101 SET character_set_client = @saved_cs_client */;
 
 --
@@ -123,7 +159,7 @@ CREATE TABLE `nguoidung` (
   UNIQUE KEY `TenDangNhap` (`TenDangNhap`),
   KEY `MaQuyen` (`MaQuyen`),
   CONSTRAINT `nguoidung_ibfk_1` FOREIGN KEY (`MaQuyen`) REFERENCES `quyenhan` (`MaQuyen`)
-) ENGINE=InnoDB AUTO_INCREMENT=4 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
+) ENGINE=InnoDB AUTO_INCREMENT=8 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
 /*!40101 SET character_set_client = @saved_cs_client */;
 
 --
@@ -132,7 +168,7 @@ CREATE TABLE `nguoidung` (
 
 LOCK TABLES `nguoidung` WRITE;
 /*!40000 ALTER TABLE `nguoidung` DISABLE KEYS */;
-INSERT INTO `nguoidung` VALUES (1,'admin123','admin123',1),(2,'nhanvien1','nv123',2),(3,'khachhang1','kh123',3);
+INSERT INTO `nguoidung` VALUES (1,'admin123','admin123',1),(2,'nhanvien1','nv123',2),(3,'khachhang1','kh123',3),(5,'admin2','$2b$10$2ECAcXr.UJjLKNWy7rK1nO0hrOcH2PBK9QayZUCeeT2UBXp47nPp6',1),(6,'khachhang','$2b$10$.ZWzua4GQyQyGLzQEIvJXeIgHIpZ8rx.dtYhTuXAbV2Hm/HkYc4f6',3),(7,'nhanvien2','$2b$10$rzQqQaHyp/SM65VeSyWsi.wY.1tX1cKk9gD/trGS9EcT0cllfUvpu',3);
 /*!40000 ALTER TABLE `nguoidung` ENABLE KEYS */;
 UNLOCK TABLES;
 
@@ -156,7 +192,7 @@ CREATE TABLE `nhanvien` (
   UNIQUE KEY `Email` (`Email`),
   KEY `MaNguoiDung` (`MaNguoiDung`),
   CONSTRAINT `nhanvien_ibfk_1` FOREIGN KEY (`MaNguoiDung`) REFERENCES `nguoidung` (`MaNguoiDung`)
-) ENGINE=InnoDB AUTO_INCREMENT=3 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
+) ENGINE=InnoDB AUTO_INCREMENT=4 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
 /*!40101 SET character_set_client = @saved_cs_client */;
 
 --
@@ -179,7 +215,7 @@ DROP TABLE IF EXISTS `nhanvien_xuly_baotri`;
 CREATE TABLE `nhanvien_xuly_baotri` (
   `MaNV` int NOT NULL,
   `MaYeuCau` int NOT NULL,
-  `NgayHoanThanh` date NOT NULL,
+  `NgayXuLy` date NOT NULL,
   PRIMARY KEY (`MaNV`,`MaYeuCau`),
   KEY `MaYeuCau` (`MaYeuCau`),
   CONSTRAINT `nhanvien_xuly_baotri_ibfk_1` FOREIGN KEY (`MaNV`) REFERENCES `nhanvien` (`MaNV`),
@@ -236,12 +272,14 @@ CREATE TABLE `phong` (
   `MaPhong` int NOT NULL AUTO_INCREMENT,
   `LoaiPhong` varchar(50) COLLATE utf8mb4_unicode_ci NOT NULL,
   `GiaPhong` decimal(10,2) NOT NULL,
-  `TrangThai` varchar(20) COLLATE utf8mb4_unicode_ci DEFAULT 'Trống',
-  `MaNguoiDung` int DEFAULT NULL,
+  `MaNguoiDung` int NOT NULL,
+  `MaTrangThai` int NOT NULL,
   PRIMARY KEY (`MaPhong`),
   KEY `MaNguoiDung` (`MaNguoiDung`),
-  CONSTRAINT `phong_ibfk_1` FOREIGN KEY (`MaNguoiDung`) REFERENCES `nguoidung` (`MaNguoiDung`)
-) ENGINE=InnoDB AUTO_INCREMENT=6 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
+  KEY `MaTrangThai` (`MaTrangThai`),
+  CONSTRAINT `phong_ibfk_1` FOREIGN KEY (`MaNguoiDung`) REFERENCES `nguoidung` (`MaNguoiDung`),
+  CONSTRAINT `phong_ibfk_2` FOREIGN KEY (`MaTrangThai`) REFERENCES `trangthai` (`MaTrangThai`)
+) ENGINE=InnoDB AUTO_INCREMENT=7 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
 /*!40101 SET character_set_client = @saved_cs_client */;
 
 --
@@ -250,7 +288,7 @@ CREATE TABLE `phong` (
 
 LOCK TABLES `phong` WRITE;
 /*!40000 ALTER TABLE `phong` DISABLE KEYS */;
-INSERT INTO `phong` VALUES (1,'Phòng Đơn',500000.00,'Trống',1),(2,'Phòng Đôi',800000.00,'Đã đặt',NULL),(3,'Phòng VIP',1500000.00,'Trống',NULL),(4,'Phòng Đơn',500000.00,'Trống',1),(5,'Phòng Đôi',800000.00,'Đang bảo trì',NULL);
+INSERT INTO `phong` VALUES (1,'Phòng Đơn',500000.00,1,1),(2,'Phòng Đôi',800000.00,2,2),(3,'Phòng VIP',1500000.00,2,1),(4,'Phòng Đơn',500000.00,1,1),(5,'Phòng Đôi',800000.00,2,3),(6,'Phòng Luxury',1500000.00,2,3);
 /*!40000 ALTER TABLE `phong` ENABLE KEYS */;
 UNLOCK TABLES;
 
@@ -293,12 +331,15 @@ CREATE TABLE `sudungdv` (
   `NgaySuDung` date NOT NULL,
   `SoLuong` int NOT NULL,
   `TongTien` decimal(10,2) NOT NULL,
+  `MaTrangThai` int NOT NULL,
   PRIMARY KEY (`MaSuDungDV`),
   KEY `MaKhachHang` (`MaKhachHang`),
   KEY `MaDichVu` (`MaDichVu`),
+  KEY `MaTrangThai` (`MaTrangThai`),
   CONSTRAINT `sudungdv_ibfk_1` FOREIGN KEY (`MaKhachHang`) REFERENCES `khachhang` (`MaKhachHang`),
-  CONSTRAINT `sudungdv_ibfk_2` FOREIGN KEY (`MaDichVu`) REFERENCES `dichvu` (`MaDichVu`)
-) ENGINE=InnoDB AUTO_INCREMENT=4 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
+  CONSTRAINT `sudungdv_ibfk_2` FOREIGN KEY (`MaDichVu`) REFERENCES `dichvu` (`MaDichVu`),
+  CONSTRAINT `sudungdv_ibfk_3` FOREIGN KEY (`MaTrangThai`) REFERENCES `trangthai` (`MaTrangThai`)
+) ENGINE=InnoDB AUTO_INCREMENT=5 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
 /*!40101 SET character_set_client = @saved_cs_client */;
 
 --
@@ -307,7 +348,7 @@ CREATE TABLE `sudungdv` (
 
 LOCK TABLES `sudungdv` WRITE;
 /*!40000 ALTER TABLE `sudungdv` DISABLE KEYS */;
-INSERT INTO `sudungdv` VALUES (1,1,1,'2023-10-02',2,300000.00),(2,2,3,'2023-10-06',1,200000.00),(3,3,4,'2023-10-11',1,300000.00);
+INSERT INTO `sudungdv` VALUES (1,1,1,'2023-10-02',2,300000.00,8),(2,2,3,'2023-10-06',1,200000.00,7),(3,3,4,'2023-10-11',1,300000.00,8),(4,2,4,'2023-10-02',2,300000.00,8);
 /*!40000 ALTER TABLE `sudungdv` ENABLE KEYS */;
 UNLOCK TABLES;
 
@@ -325,12 +366,15 @@ CREATE TABLE `thanhtoan` (
   `SoTien` decimal(10,2) NOT NULL,
   `PhuongThuc` varchar(20) COLLATE utf8mb4_unicode_ci NOT NULL,
   `NgayThanhToan` date NOT NULL,
+  `MaKhachHang` int NOT NULL,
   PRIMARY KEY (`MaThanhToan`),
   KEY `MaDatPhong` (`MaDatPhong`),
   KEY `MaNV` (`MaNV`),
+  KEY `MaKhachHang` (`MaKhachHang`),
   CONSTRAINT `thanhtoan_ibfk_1` FOREIGN KEY (`MaDatPhong`) REFERENCES `datphong` (`MaDatPhong`),
-  CONSTRAINT `thanhtoan_ibfk_2` FOREIGN KEY (`MaNV`) REFERENCES `nhanvien` (`MaNV`)
-) ENGINE=InnoDB AUTO_INCREMENT=3 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
+  CONSTRAINT `thanhtoan_ibfk_2` FOREIGN KEY (`MaNV`) REFERENCES `nhanvien` (`MaNV`),
+  CONSTRAINT `thanhtoan_ibfk_3` FOREIGN KEY (`MaKhachHang`) REFERENCES `khachhang` (`MaKhachHang`)
+) ENGINE=InnoDB AUTO_INCREMENT=4 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
 /*!40101 SET character_set_client = @saved_cs_client */;
 
 --
@@ -339,9 +383,81 @@ CREATE TABLE `thanhtoan` (
 
 LOCK TABLES `thanhtoan` WRITE;
 /*!40000 ALTER TABLE `thanhtoan` DISABLE KEYS */;
-INSERT INTO `thanhtoan` VALUES (1,1,1,1000000.00,'Tiền mặt','2023-10-03'),(2,2,1,1600000.00,'Chuyển khoản','2023-10-07');
+INSERT INTO `thanhtoan` VALUES (1,1,1,1000000.00,'Tiền mặt','2023-10-03',1),(2,2,1,1600000.00,'Chuyển khoản','2023-10-07',2);
 /*!40000 ALTER TABLE `thanhtoan` ENABLE KEYS */;
 UNLOCK TABLES;
+
+--
+-- Table structure for table `thongkedoanhthu`
+--
+
+DROP TABLE IF EXISTS `thongkedoanhthu`;
+/*!40101 SET @saved_cs_client     = @@character_set_client */;
+/*!50503 SET character_set_client = utf8mb4 */;
+CREATE TABLE `thongkedoanhthu` (
+  `MaThongKe` int NOT NULL AUTO_INCREMENT,
+  `ThangNam` varchar(7) COLLATE utf8mb4_unicode_ci NOT NULL,
+  `LoaiPhong` varchar(50) COLLATE utf8mb4_unicode_ci DEFAULT NULL,
+  `DoanhThuPhong` decimal(15,2) DEFAULT '0.00',
+  `DoanhThuDichVu` decimal(15,2) DEFAULT '0.00',
+  `TongDoanhThu` decimal(15,2) DEFAULT '0.00',
+  PRIMARY KEY (`MaThongKe`),
+  UNIQUE KEY `ThangNam` (`ThangNam`,`LoaiPhong`),
+  UNIQUE KEY `thong_ke_doanh_thu__thang_nam__loai_phong` (`ThangNam`,`LoaiPhong`)
+) ENGINE=InnoDB AUTO_INCREMENT=4 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
+/*!40101 SET character_set_client = @saved_cs_client */;
+
+--
+-- Dumping data for table `thongkedoanhthu`
+--
+
+LOCK TABLES `thongkedoanhthu` WRITE;
+/*!40000 ALTER TABLE `thongkedoanhthu` DISABLE KEYS */;
+INSERT INTO `thongkedoanhthu` VALUES (1,'2023-10','Phòng Đơn',1000000.00,300000.00,1300000.00),(2,'2023-10','Phòng Đôi',1600000.00,200000.00,1800000.00);
+/*!40000 ALTER TABLE `thongkedoanhthu` ENABLE KEYS */;
+UNLOCK TABLES;
+
+--
+-- Table structure for table `trangthai`
+--
+
+DROP TABLE IF EXISTS `trangthai`;
+/*!40101 SET @saved_cs_client     = @@character_set_client */;
+/*!50503 SET character_set_client = utf8mb4 */;
+CREATE TABLE `trangthai` (
+  `MaTrangThai` int NOT NULL AUTO_INCREMENT,
+  `TenTrangThai` varchar(50) COLLATE utf8mb4_unicode_ci NOT NULL,
+  `LoaiTrangThai` varchar(20) COLLATE utf8mb4_unicode_ci NOT NULL,
+  PRIMARY KEY (`MaTrangThai`),
+  UNIQUE KEY `TenTrangThai` (`TenTrangThai`,`LoaiTrangThai`)
+) ENGINE=InnoDB AUTO_INCREMENT=12 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
+/*!40101 SET character_set_client = @saved_cs_client */;
+
+--
+-- Dumping data for table `trangthai`
+--
+
+LOCK TABLES `trangthai` WRITE;
+/*!40000 ALTER TABLE `trangthai` DISABLE KEYS */;
+INSERT INTO `trangthai` VALUES (3,'Bảo trì','Phong'),(7,'Chưa phê duyệt','SuDungDV'),(9,'Chưa xử lý','YeuCauBaoTri'),(8,'Đã phê duyệt','SuDungDV'),(5,'Đã xác nhận','DatPhong'),(2,'Đang sử dụng','Phong'),(4,'Đang xử lý','DatPhong'),(10,'Đang xử lý','YeuCauBaoTri'),(11,'Hoàn tất','YeuCauBaoTri'),(6,'Hủy','DatPhong'),(1,'Trống','Phong');
+/*!40000 ALTER TABLE `trangthai` ENABLE KEYS */;
+UNLOCK TABLES;
+
+--
+-- Temporary view structure for view `view_thongkedoanhthu`
+--
+
+DROP TABLE IF EXISTS `view_thongkedoanhthu`;
+/*!50001 DROP VIEW IF EXISTS `view_thongkedoanhthu`*/;
+SET @saved_cs_client     = @@character_set_client;
+/*!50503 SET character_set_client = utf8mb4 */;
+/*!50001 CREATE VIEW `view_thongkedoanhthu` AS SELECT 
+ 1 AS `ThangNam`,
+ 1 AS `LoaiPhong`,
+ 1 AS `DoanhThuPhong`,
+ 1 AS `DoanhThuDichVu`,
+ 1 AS `TongDoanhThu`*/;
+SET character_set_client = @saved_cs_client;
 
 --
 -- Table structure for table `yeucaubaotri`
@@ -355,11 +471,14 @@ CREATE TABLE `yeucaubaotri` (
   `MaPhong` int NOT NULL,
   `NgayYeuCau` date NOT NULL,
   `MoTa` varchar(200) COLLATE utf8mb4_unicode_ci DEFAULT NULL,
-  `TrangThai` varchar(20) COLLATE utf8mb4_unicode_ci DEFAULT 'Chưa xử lý',
+  `NgayHoanThanh` date DEFAULT NULL,
+  `MaTrangThai` int NOT NULL,
   PRIMARY KEY (`MaYeuCau`),
   KEY `MaPhong` (`MaPhong`),
-  CONSTRAINT `yeucaubaotri_ibfk_1` FOREIGN KEY (`MaPhong`) REFERENCES `phong` (`MaPhong`)
-) ENGINE=InnoDB AUTO_INCREMENT=3 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
+  KEY `MaTrangThai` (`MaTrangThai`),
+  CONSTRAINT `yeucaubaotri_ibfk_1` FOREIGN KEY (`MaPhong`) REFERENCES `phong` (`MaPhong`),
+  CONSTRAINT `yeucaubaotri_ibfk_2` FOREIGN KEY (`MaTrangThai`) REFERENCES `trangthai` (`MaTrangThai`)
+) ENGINE=InnoDB AUTO_INCREMENT=5 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
 /*!40101 SET character_set_client = @saved_cs_client */;
 
 --
@@ -368,9 +487,27 @@ CREATE TABLE `yeucaubaotri` (
 
 LOCK TABLES `yeucaubaotri` WRITE;
 /*!40000 ALTER TABLE `yeucaubaotri` DISABLE KEYS */;
-INSERT INTO `yeucaubaotri` VALUES (1,5,'2023-10-08','Máy lạnh không hoạt động','Chưa xử lý'),(2,2,'2023-10-09','Đèn phòng bị hỏng','Đã xử lý');
+INSERT INTO `yeucaubaotri` VALUES (1,5,'2023-10-08','Máy lạnh không hoạt động','2023-10-10',9),(2,2,'2023-10-09','Đèn phòng bị hỏng','2023-10-12',11);
 /*!40000 ALTER TABLE `yeucaubaotri` ENABLE KEYS */;
 UNLOCK TABLES;
+
+--
+-- Final view structure for view `view_thongkedoanhthu`
+--
+
+/*!50001 DROP VIEW IF EXISTS `view_thongkedoanhthu`*/;
+/*!50001 SET @saved_cs_client          = @@character_set_client */;
+/*!50001 SET @saved_cs_results         = @@character_set_results */;
+/*!50001 SET @saved_col_connection     = @@collation_connection */;
+/*!50001 SET character_set_client      = utf8mb4 */;
+/*!50001 SET character_set_results     = utf8mb4 */;
+/*!50001 SET collation_connection      = utf8mb4_0900_ai_ci */;
+/*!50001 CREATE ALGORITHM=UNDEFINED */
+/*!50013 DEFINER=`root`@`localhost` SQL SECURITY DEFINER */
+/*!50001 VIEW `view_thongkedoanhthu` AS select date_format(`tt`.`NgayThanhToan`,'%Y-%m') AS `ThangNam`,`p`.`LoaiPhong` AS `LoaiPhong`,sum(`tt`.`SoTien`) AS `DoanhThuPhong`,sum(`sddv`.`TongTien`) AS `DoanhThuDichVu`,sum((`tt`.`SoTien` + coalesce(`sddv`.`TongTien`,0))) AS `TongDoanhThu` from (((`thanhtoan` `tt` join `datphong` `dp` on((`tt`.`MaDatPhong` = `dp`.`MaDatPhong`))) join `phong` `p` on((`dp`.`MaPhong` = `p`.`MaPhong`))) left join (select `dp`.`MaDatPhong` AS `MaDatPhong`,sum(`sddv`.`TongTien`) AS `TongTien` from (`sudungdv` `sddv` join `datphong` `dp` on((`sddv`.`MaKhachHang` = `dp`.`MaKhachHang`))) where (`sddv`.`NgaySuDung` between `dp`.`NgayDat` and `dp`.`NgayTra`) group by `dp`.`MaDatPhong`) `sddv` on((`dp`.`MaDatPhong` = `sddv`.`MaDatPhong`))) group by date_format(`tt`.`NgayThanhToan`,'%Y-%m'),`p`.`LoaiPhong` */;
+/*!50001 SET character_set_client      = @saved_cs_client */;
+/*!50001 SET character_set_results     = @saved_cs_results */;
+/*!50001 SET collation_connection      = @saved_col_connection */;
 /*!40103 SET TIME_ZONE=@OLD_TIME_ZONE */;
 
 /*!40101 SET SQL_MODE=@OLD_SQL_MODE */;
@@ -381,4 +518,4 @@ UNLOCK TABLES;
 /*!40101 SET COLLATION_CONNECTION=@OLD_COLLATION_CONNECTION */;
 /*!40111 SET SQL_NOTES=@OLD_SQL_NOTES */;
 
--- Dump completed on 2025-03-18 10:31:46
+-- Dump completed on 2025-03-24 21:01:30

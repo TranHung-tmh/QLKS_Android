@@ -1,41 +1,59 @@
 const { DataTypes } = require("sequelize");
 const sequelize = require("../config/db"); // Import kết nối Sequelize
+const NguoiDung = require("./nguoidung"); // Import model NguoiDung
+const TrangThai = require("./trangthai"); // Import model TrangThai
 
 const Phong = sequelize.define(
-    "Phong", // Tên model
+    "Phong",
     {
         MaPhong: {
-            type: DataTypes.INTEGER, // Sửa từ STRING thành INTEGER
+            type: DataTypes.INTEGER,
             primaryKey: true,
-            autoIncrement: true, // Thêm autoIncrement để khớp với CSDL
+            autoIncrement: true,
             allowNull: false,
         },
         LoaiPhong: {
-            type: DataTypes.STRING(50), // Giới hạn 50 ký tự như CSDL
+            type: DataTypes.STRING(50),
             allowNull: false,
         },
         GiaPhong: {
-            type: DataTypes.DECIMAL(10, 2), // Sửa từ STRING thành DECIMAL(10,2)
-            allowNull: false, // Sửa từ allowNull: true thành false
-        },
-        TrangThai: { // Đổi từ TinhTrang thành TrangThai
-            type: DataTypes.STRING(20), // Giới hạn 20 ký tự như CSDL
+            type: DataTypes.DECIMAL(10, 2),
             allowNull: false,
-            defaultValue: "Trống", // Thêm giá trị mặc định như CSDL
         },
-        MaNguoiDung: { // Thêm trường MaNguoiDung (foreign key)
+        MaTrangThai: { // Thay TrangThai thành MaTrangThai
             type: DataTypes.INTEGER,
-            allowNull: true,
+            allowNull: false,
+            defaultValue: 1, // Mặc định là "Trống" (MaTrangThai = 1)
             references: {
-                model: "NguoiDung", // Tên bảng liên kết
-                key: "MaNguoiDung", // Khóa chính của bảng NguoiDung
+                model: TrangThai,
+                key: "MaTrangThai",
+            },
+        },
+        MaNguoiDung: {
+            type: DataTypes.INTEGER,
+            allowNull: false, // Không cho phép NULL
+            references: {
+                model: NguoiDung,
+                key: "MaNguoiDung",
             },
         },
     },
     {
-        tableName: "Phong", // Khớp với tên bảng trong CSDL
-        timestamps: false, // Không tự động tạo `createdAt` và `updatedAt`
+        tableName: "Phong",
+        timestamps: false,
     }
 );
+
+// Quan hệ với bảng NguoiDung
+Phong.belongsTo(NguoiDung, {
+    foreignKey: "MaNguoiDung",
+    targetKey: "MaNguoiDung",
+});
+
+// Quan hệ với bảng TrangThai
+Phong.belongsTo(TrangThai, {
+    foreignKey: "MaTrangThai",
+    targetKey: "MaTrangThai",
+});
 
 module.exports = Phong;

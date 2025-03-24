@@ -1,5 +1,5 @@
 const { DataTypes } = require("sequelize");
-const sequelize = require("../config/db"); // Import kết nối Sequelize
+const sequelize = require("../config/db");
 const NhanVien = require("./nhanvien");
 const YeuCauBaoTri = require("./yeucaubaotri");
 
@@ -11,7 +11,7 @@ const NhanVienXuLyBaoTri = sequelize.define(
             primaryKey: true,
             allowNull: false,
             references: {
-                model: "NhanVien",
+                model: NhanVien,
                 key: "MaNV",
             },
         },
@@ -20,11 +20,11 @@ const NhanVienXuLyBaoTri = sequelize.define(
             primaryKey: true,
             allowNull: false,
             references: {
-                model: "YeuCauBaoTri",
+                model: YeuCauBaoTri,
                 key: "MaYeuCau",
             },
         },
-        NgayHoanThanh: {
+        NgayXuLy: {
             type: DataTypes.DATE,
             allowNull: false,
         },
@@ -40,9 +40,21 @@ NhanVienXuLyBaoTri.belongsTo(NhanVien, {
     foreignKey: "MaNV",
     targetKey: "MaNV",
 });
+
 NhanVienXuLyBaoTri.belongsTo(YeuCauBaoTri, {
     foreignKey: "MaYeuCau",
     targetKey: "MaYeuCau",
+});
+
+// Quan hệ ngược
+NhanVien.hasMany(NhanVienXuLyBaoTri, {
+    foreignKey: "MaNV",
+    sourceKey: "MaNV",
+});
+
+YeuCauBaoTri.hasMany(NhanVienXuLyBaoTri, {
+    foreignKey: "MaYeuCau",
+    sourceKey: "MaYeuCau",
 });
 
 module.exports = NhanVienXuLyBaoTri;

@@ -1,19 +1,21 @@
 const db = require("../../config/db");
 const DatPhong = require("../../models/datphong");
 const KhachHang = require("../../models/khachhang");
+const NhanVien = require("../../models/nhanvien");
 const ThanhToan = require("../../models/thanhtoan");
 const { fn, col } = require("sequelize");
 
 const getAllThanhToan = async () => {
     return await ThanhToan.findAll({
         include: [
-            { model: KhachHang, attributes: ['Ten'] },  // Lấy tên khách hàng
+            { model: NhanVien, attributes: ['HoTen'] },  // Lấy tên khách hàng
+            { model: KhachHang, attributes: ['HoTen'] },
             {
                 model: DatPhong,
                 attributes: [
-                    'NgayNhan', // Lấy NgayNhan
+                    'NgayDat', // Lấy NgayNhan
                     'NgayTra',
-                    [fn('DATEDIFF', col('DatPhong.NgayTra'), col('DatPhong.NgayNhan')), 'SoNgayO']  // Tính số ngày giữa NgayTra và NgayNhan
+                    [fn('DATEDIFF', col('DatPhong.NgayTra'), col('DatPhong.NgayDat')), 'SoNgayO']  // Tính số ngày giữa NgayTra và NgayNhan
                 ],
             },
         ],
@@ -23,13 +25,14 @@ const getAllThanhToan = async () => {
 const getThanhToanById = async (id) => {
     return await ThanhToan.findByPk(id,{
         include: [
-            { model: KhachHang, attributes: ['Ten'] },  // Lấy tên khách hàng
+            { model: NhanVien, attributes: ['HoTen'] },
+            { model: KhachHang, attributes: ['HoTen'] },  // Lấy tên khách hàng
             {
                 model: DatPhong,
                 attributes: [
-                    'NgayNhan', // Lấy NgayNhan
+                    'NgayDat', // Lấy NgayNhan
                     'NgayTra',
-                    [fn('DATEDIFF', col('DatPhong.NgayTra'), col('DatPhong.NgayNhan')), 'SoNgayO']  // Tính số ngày giữa NgayTra và NgayNhan
+                    [fn('DATEDIFF', col('DatPhong.NgayTra'), col('DatPhong.NgayDat')), 'SoNgayO']  // Tính số ngày giữa NgayTra và NgayNhan
                 ],
             },
         ],
@@ -44,13 +47,14 @@ const updateThanhToan = async (id, thanhToanData) => {
     console.log(`Tìm phản hồi với MaPhanHoi: ${id}`); // In ra MaPhanHoi để kiểm tra
     const thanhToan = await ThanhToan.findByPk(id,{
         include: [
-            { model: KhachHang, attributes: ['Ten'] },  // Lấy tên khách hàng
+            { model: NhanVien, attributes: ['HoTen'] },
+            { model: KhachHang, attributes: ['HoTen'] },  // Lấy tên khách hàng
             {
                 model: DatPhong,
                 attributes: [
-                    'NgayNhan', // Lấy NgayNhan
+                    'NgayDat', // Lấy NgayNhan
                     'NgayTra',
-                    [fn('DATEDIFF', col('DatPhong.NgayTra'), col('DatPhong.NgayNhan')), 'SoNgayO']  // Tính số ngày giữa NgayTra và NgayNhan
+                    [fn('DATEDIFF', col('DatPhong.NgayTra'), col('DatPhong.NgayDat')), 'SoNgayO']  // Tính số ngày giữa NgayTra và NgayNhan
                 ],
             },
         ],

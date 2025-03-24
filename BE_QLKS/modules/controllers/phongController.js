@@ -59,8 +59,8 @@ const getPhongByID = async (req, res) => {
 
 const createPhong = async (req, res) => {
     try {
-        const { SoPhong, LoaiPhong, GiaPhong, TinhTrang } = req.body;
-        if ( !SoPhong || !LoaiPhong || !GiaPhong || !TinhTrang) {
+        const { MaPhong, LoaiPhong, GiaPhong, MaNguoiDung } = req.body;
+        if ( !MaPhong || !LoaiPhong || !GiaPhong || !MaNguoiDung) {
             return res.status(400).send({
                 success: false,
                 message: "Vui lòng điền đầy đủ thông tin",

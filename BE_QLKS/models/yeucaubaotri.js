@@ -1,48 +1,63 @@
 const { DataTypes } = require("sequelize");
 const sequelize = require("../config/db"); // Import kết nối Sequelize
 const Phong = require("./phong"); // Import model Phong
+const TrangThai = require("./trangthai"); // Import model TrangThai
 
 const YeuCauBaoTri = sequelize.define(
-    "YeuCauBaoTri", // Tên model
+    "YeuCauBaoTri",
     {
         MaYeuCau: {
-            type: DataTypes.INTEGER, // Sửa từ STRING thành INTEGER
-            primaryKey: true,       // Khóa chính
-            allowNull: false,       // Không NULL
-            autoIncrement: true,    // Tự động tăng
+            type: DataTypes.INTEGER,
+            primaryKey: true,
+            allowNull: false,
+            autoIncrement: true,
         },
         NgayYeuCau: {
-            type: DataTypes.DATE,   // Sửa từ STRING thành DATE
-            allowNull: false,       // Không NULL
+            type: DataTypes.DATE,
+            allowNull: false,
         },
-        MoTa: { // Thêm trường MoTa
-            type: DataTypes.STRING(200), // Giới hạn 200 ký tự
-            allowNull: true,            // Có thể NULL (không có NOT NULL trong CSDL)
+        MoTa: {
+            type: DataTypes.STRING(200),
+            allowNull: true,
         },
-        TrangThai: { // Thêm trường TrangThai
-            type: DataTypes.STRING(20), // Giới hạn 20 ký tự
-            allowNull: false,           // Không NULL (có DEFAULT)
-            defaultValue: "Chưa xử lý", // Giá trị mặc định như CSDL
+        MaTrangThai: { // Thay TrangThai thành MaTrangThai
+            type: DataTypes.INTEGER,
+            allowNull: false,
+            defaultValue: 9, // Mặc định là "Chưa xử lý" (MaTrangThai = 9)
+            references: {
+                model: TrangThai,
+                key: "MaTrangThai",
+            },
         },
         MaPhong: {
-            type: DataTypes.INTEGER, // Sửa từ STRING thành INTEGER
-            allowNull: false,        // Không NULL
+            type: DataTypes.INTEGER,
+            allowNull: false,
             references: {
-                model: Phong,        // Liên kết với model Phong
-                key: "MaPhong",      // Khóa chính của Phong
+                model: Phong,
+                key: "MaPhong",
             },
+        },
+        NgayHoanThanh: {
+            type: DataTypes.DATE,
+            allowNull: true,
         },
     },
     {
-        tableName: "YeuCauBaoTri", // Khớp với tên bảng trong CSDL
-        timestamps: false,         // Không tự động tạo `createdAt` và `updatedAt`
+        tableName: "YeuCauBaoTri",
+        timestamps: false,
     }
 );
 
-// Định nghĩa các mối quan hệ giữa các bảng
+// Quan hệ với bảng Phong
 YeuCauBaoTri.belongsTo(Phong, {
-    foreignKey: "MaPhong", // Khóa ngoại trong bảng YeuCauBaoTri
-    targetKey: "MaPhong",  // Khóa chính của bảng Phong
+    foreignKey: "MaPhong",
+    targetKey: "MaPhong",
+});
+
+// Quan hệ với bảng TrangThai
+YeuCauBaoTri.belongsTo(TrangThai, {
+    foreignKey: "MaTrangThai",
+    targetKey: "MaTrangThai",
 });
 
 module.exports = YeuCauBaoTri;

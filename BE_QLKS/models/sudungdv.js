@@ -2,60 +2,77 @@ const { DataTypes } = require("sequelize");
 const sequelize = require("../config/db"); // Import kết nối Sequelize
 const KhachHang = require("./khachhang"); // Import model KhachHang
 const DichVu = require("./dichvu"); // Import model DichVu
+const TrangThai = require("./trangthai"); // Import model TrangThai
 
 const SuDungDV = sequelize.define(
-    "SuDungDV", // Tên model
+    "SuDungDV",
     {
         MaSuDungDV: {
-            type: DataTypes.INTEGER, // Sửa từ STRING thành INTEGER
-            primaryKey: true,       // Khóa chính
-            allowNull: false,       // Không NULL
-            autoIncrement: true,    // Tự động tăng
+            type: DataTypes.INTEGER,
+            primaryKey: true,
+            allowNull: false,
+            autoIncrement: true,
         },
         NgaySuDung: {
-            type: DataTypes.DATE,   // Sửa từ TEXT thành DATE
-            allowNull: false,       // Không NULL
+            type: DataTypes.DATE,
+            allowNull: false,
         },
         SoLuong: {
-            type: DataTypes.INTEGER, // Sửa từ STRING thành INTEGER
-            allowNull: false,        // Sửa từ allowNull: true thành false
+            type: DataTypes.INTEGER,
+            allowNull: false,
         },
         TongTien: {
-            type: DataTypes.DECIMAL(10, 2), // Sửa từ STRING thành DECIMAL(10,2)
-            allowNull: false,               // Sửa từ allowNull: true thành false
+            type: DataTypes.DECIMAL(10, 2),
+            allowNull: false,
         },
         MaKhachHang: {
-            type: DataTypes.INTEGER, // Sửa từ STRING thành INTEGER
-            allowNull: false,        // Không NULL
+            type: DataTypes.INTEGER,
+            allowNull: false,
             references: {
-                model: KhachHang,    // Liên kết với model KhachHang
-                key: "MaKhachHang",  // Trường khóa chính của KhachHang
+                model: KhachHang,
+                key: "MaKhachHang",
             },
         },
         MaDichVu: {
-            type: DataTypes.INTEGER, // Sửa từ STRING thành INTEGER
-            allowNull: false,        // Không NULL
+            type: DataTypes.INTEGER,
+            allowNull: false,
             references: {
-                model: DichVu,       // Liên kết với model DichVu
-                key: "MaDichVu",     // Trường khóa chính của DichVu
+                model: DichVu,
+                key: "MaDichVu",
+            },
+        },
+        MaTrangThai: { // Thay TrangThai thành MaTrangThai
+            type: DataTypes.INTEGER,
+            allowNull: false,
+            defaultValue: 7, // Mặc định là "Chưa phê duyệt" (MaTrangThai = 7)
+            references: {
+                model: TrangThai,
+                key: "MaTrangThai",
             },
         },
     },
     {
-        tableName: "SuDungDV", // Khớp với tên bảng trong CSDL
-        timestamps: false,     // Không tự động tạo `createdAt` và `updatedAt`
+        tableName: "SuDungDV",
+        timestamps: false,
     }
 );
 
-// Định nghĩa các mối quan hệ giữa các bảng
+// Quan hệ với bảng KhachHang
 SuDungDV.belongsTo(KhachHang, {
-    foreignKey: "MaKhachHang", // Khóa ngoại trong bảng SuDungDV
-    targetKey: "MaKhachHang",  // Khóa chính của bảng KhachHang
+    foreignKey: "MaKhachHang",
+    targetKey: "MaKhachHang",
 });
 
+// Quan hệ với bảng DichVu
 SuDungDV.belongsTo(DichVu, {
-    foreignKey: "MaDichVu",    // Khóa ngoại trong bảng SuDungDV
-    targetKey: "MaDichVu",     // Khóa chính của bảng DichVu
+    foreignKey: "MaDichVu",
+    targetKey: "MaDichVu",
+});
+
+// Quan hệ với bảng TrangThai
+SuDungDV.belongsTo(TrangThai, {
+    foreignKey: "MaTrangThai",
+    targetKey: "MaTrangThai",
 });
 
 module.exports = SuDungDV;

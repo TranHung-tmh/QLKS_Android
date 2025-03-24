@@ -1,5 +1,5 @@
 const { DataTypes } = require("sequelize");
-const sequelize = require("../config/db"); // Import kết nối Sequelize
+const sequelize = require("../config/db");
 const QuyenHan = require("./quyenhan");
 
 const NguoiDung = sequelize.define(
@@ -35,7 +35,6 @@ const NguoiDung = sequelize.define(
     }
 );
 
-// Quan hệ với bảng QuyenHan
 NguoiDung.belongsTo(QuyenHan, {
     foreignKey: "MaQuyen",
     targetKey: "MaQuyen",
